@@ -1,6 +1,33 @@
 import pandas as pd
 import geopandas as gpd
 import networkx as nx
+import numpy as np
+
+
+# metoda wyznaczająca kąt w stopniach na podstawie sin i cos
+def calculate_angle(sin: float, cos: float) -> float:
+    return np.degrees(np.arctan2(sin, cos))
+
+# metoda wyznaczająca cosinus kąta pomiędzy wektorami
+def calculate_cos(a: np.ndarray, b: np.ndarray) -> float:
+    return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
+
+# metoda wyznaczająca sinus kąta pomiędzy wektorami
+def calculate_sin(a: np.ndarray, b: np.ndarray) -> float:
+    return (a[0]*b[1] - a[1]*b[0]) / (np.linalg.norm(a) * np.linalg.norm(b))
+
+
+# metoda tworząca wektor pomiędzy dwoma węzłami w grafie
+def get_vector_between_nodes(G: nx.MultiDiGraph, node_from: int, node_to: int) -> np.ndarray:
+    x_from = G.nodes[node_from]['x']
+    y_from = G.nodes[node_from]['y']
+    x_to = G.nodes[node_to]['x']
+    y_to = G.nodes[node_to]['y']
+    
+    dx = x_to - x_from
+    dy = y_to - y_from
+    
+    return np.array(dx, dy)
 
 
 # metoda pozwalająca na wyznaczenie bbox na podstawie posiadanego grafu G
