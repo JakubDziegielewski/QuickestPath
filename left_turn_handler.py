@@ -30,7 +30,9 @@ class LeftTurnHandler:
         
         # wyznacz kąt (w stopniach)
         alpha = calculate_angle(sin_alpha, cos_alpha)
-        
+
+        # jeśli obliczony kąt jest większy niż zadana wartość klasyfikująca skręt jako skręt w lewo
+        # to zwracamy True, wpp: False
         if alpha > self._min_angle_left_turn:
             return True
         return False
