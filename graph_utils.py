@@ -4,6 +4,30 @@ import networkx as nx
 import numpy as np
 
 
+# metoda definiująca liniowy porządek dla dróg różnego typu (atrybut 'highway')
+# w celu rozpoznawania zmiany kategorii drogi przy skręcie w lewo
+# metoda zwraca -1, jeśli skręcamy w gorszą drogę, 0 jeśli w taką samą, 1 jeśli na lepszą
+def compare_highways(from_highway: str, to_highway: str) -> int:
+    custom_highway_order = {
+            'motorway': 1,
+            'trunk': 2,
+            'primary': 3,
+            'secondary': 4,
+            'motorway_link': 5,
+            'primary_link': 5,
+            'trunk_link': 5,
+            'tertiary': 6,
+            'unclassified': 6,
+            'secondary_link': 6
+        }
+    if custom_highway_order.get(from_highway, 7) < custom_highway_order.get(to_highway, 7):
+        return -1
+    elif custom_highway_order.get(from_highway, 7) == custom_highway_order.get(to_highway, 7):
+        return 0
+    else:
+        return 1
+    
+
 # metoda wyznaczająca kąt w stopniach na podstawie sin i cos
 def calculate_angle(sin: float, cos: float) -> float:
     return np.degrees(np.arctan2(sin, cos))
@@ -27,7 +51,7 @@ def get_vector_between_nodes(G: nx.MultiDiGraph, node_from: int, node_to: int) -
     dx = x_to - x_from
     dy = y_to - y_from
     
-    return np.array(dx, dy)
+    return np.array([dx, dy])
 
 
 # metoda pozwalająca na wyznaczenie bbox na podstawie posiadanego grafu G
