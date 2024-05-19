@@ -84,8 +84,12 @@ class BestPathFinder:
         
         
     def _reconstruct_path(self, predecessors: dict, current_node: int) -> list:
-        pass
-    
+        path = [current_node]
+        while current_node in predecessors:
+            current_node = predecessors[current_node]
+            if current_node != -1:
+                path.insert(0, current_node)
+        return path
     
     
     
