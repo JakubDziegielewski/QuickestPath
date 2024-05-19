@@ -2,7 +2,6 @@ import pandas as pd
 import geopandas as gpd
 import networkx as nx
 import numpy as np
-import math
 
 
 # metoda definiująca heurystykę obliczającą najbardziej optymistyczny czas przejazdu między dwoma punktami w grafie
@@ -19,16 +18,16 @@ def calculate_heuristic(G: nx.MultiDiGraph, current_node: int, destination_node:
     R = 6371 # promień Ziemi w km 
 
     # zamień współrzędne w stopniach na radiany, a następnie oblicz współrzędne kartezjańskie
-    x_curr = R * math.cos(math.radians(lat_current)) * math.cos(math.radians(lon_current))
-    y_curr = R * math.cos(math.radians(lat_current)) * math.sin(math.radians(lon_current))
-    z_curr = R * math.sin(lat_current)
+    x_curr = R * np.cos(np.radians(lat_current)) * np.cos(np.radians(lon_current))
+    y_curr = R * np.cos(np.radians(lat_current)) * np.sin(np.radians(lon_current))
+    z_curr = R * np.sin(lat_current)
     
-    x_dest = R * math.cos(math.radians(lat_dest)) * math.cos(math.radians(lon_dest))
-    y_dest = R * math.cos(math.radians(lat_dest)) * math.sin(math.radians(lon_dest))
-    z_dest = R * math.sin(lat_dest)
+    x_dest = R * np.cos(np.radians(lat_dest)) * np.cos(np.radians(lon_dest))
+    y_dest = R * np.cos(np.radians(lat_dest)) * np.sin(np.radians(lon_dest))
+    z_dest = R * np.sin(lat_dest)
     
     # oblicz odległość euklidesową
-    euclid_dist = math.sqrt((x_dest - x_curr)**2 + (y_dest - y_curr)**2 + (z_dest - z_curr)**2)
+    euclid_dist = np.sqrt((x_dest - x_curr)**2 + (y_dest - y_curr)**2 + (z_dest - z_curr)**2)
     
     # zwróć oczekiwany bardzo optymistyczny czas przejazdu
     return euclid_dist / (heur_maxspeed / 3600)
