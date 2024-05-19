@@ -2,7 +2,37 @@ import pandas as pd
 import geopandas as gpd
 import networkx as nx
 import numpy as np
+import math
 
+
+# metoda definiująca heurystykę obliczającą najbardziej optymistyczny czas przejazdu między dwoma punktami w grafie
+# wyznacza odległość euklidesową między węzłami na podstawie ich współrzędnych
+# a następnie wyznacza optymistyczny oczekiwany czas dojazdu przy założeniu,
+# że istnieje droga w linii prostej o wysokim limicie prędkości 
+def calculate_heuristic(G: nx.MultiDiGraph, current_node: int, destination_node: int, heur_maxspeed: int) -> float:
+   
+    # pobierz dane o współrzędnych geogr. obu punktów
+    lon_current = G.nodes[current_node]["x"]
+    lat_current = G.nodes[current_node]["y"]
+    lon_dest = G.nodes[destination_node]["x"]
+    lat_dest = G.nodes[destination_node]["y"]
+    R = 6371 # promień Ziemi w km 
+
+    # zamień współrzędne w stopniach na radiany, a następnie oblicz współrzędne kartezjańskie
+    x_curr = R * math.cos(math.radians(lat_current)) * math.cos(math.radians(lon_current))
+    y_curr = R * math.cos(math.radians(lat_current)) * math.sin(math.radians(lon_current))
+    z_curr = R * math.sin(lat_current)
+    
+    x_dest = R * math.cos(math.radians(lat_dest)) * math.cos(math.radians(lon_dest))
+    y_dest = R * math.cos(math.radians(lat_dest)) * math.sin(math.radians(lon_dest))
+    z_dest = R * math.sin(lat_dest)
+    
+    # oblicz odległość euklidesową
+    euclid_dist = math.sqrt((x_dest - x_curr)**2 + (y_dest - y_curr)**2 + (z_dest - z_curr)**2)
+    
+    # zwróć oczekiwany bardzo optymistyczny czas przejazdu
+    return euclid_dist / (heur_maxspeed / 3600)
+    
 
 # metoda definiująca liniowy porządek dla dróg różnego typu (atrybut 'highway')
 # w celu rozpoznawania zmiany kategorii drogi przy skręcie w lewo
