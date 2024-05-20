@@ -9,28 +9,37 @@ import numpy as np
 # a następnie wyznacza optymistyczny oczekiwany czas dojazdu przy założeniu,
 # że istnieje droga w linii prostej o wysokim limicie prędkości 
 def calculate_heuristic(G: nx.MultiDiGraph, current_node: int, destination_node: int, heur_maxspeed: int) -> float:
-   
+
+    # oblicz odległość euklidesową
+    euclid_dist = calculate_euclid_dist(G, current_node, destination_node)
+    
+    # zwróć oczekiwany bardzo optymistyczny czas przejazdu
+    return euclid_dist / (heur_maxspeed / 3600)
+    
+
+# metoda ma na celu wyznaczenie odległości euklidesowej pomiędzy dwoma węzłami w grafie
+# wykorzystywane w tym celu są współrzędne geograficzne obu węzłów
+# wynik zwracany jest w [km]
+def calculate_euclid_dist(G: nx.MultiDiGraph, first_node: int, second_node: int) -> float:
+    
     # pobierz dane o współrzędnych geogr. obu punktów
-    lon_current = G.nodes[current_node]["x"]
-    lat_current = G.nodes[current_node]["y"]
-    lon_dest = G.nodes[destination_node]["x"]
-    lat_dest = G.nodes[destination_node]["y"]
+    lon_current = G.nodes[first_node]["x"]
+    lat_current = G.nodes[first_node]["y"]
+    lon_dest = G.nodes[second_node]["x"]
+    lat_dest = G.nodes[second_node]["y"]
     R = 6371 # promień Ziemi w km 
 
     # zamień współrzędne w stopniach na radiany, a następnie oblicz współrzędne kartezjańskie
     x_curr = R * np.cos(np.radians(lat_current)) * np.cos(np.radians(lon_current))
     y_curr = R * np.cos(np.radians(lat_current)) * np.sin(np.radians(lon_current))
-    z_curr = R * np.sin(lat_current)
+    z_curr = R * np.sin(np.radians(lat_current))
     
     x_dest = R * np.cos(np.radians(lat_dest)) * np.cos(np.radians(lon_dest))
     y_dest = R * np.cos(np.radians(lat_dest)) * np.sin(np.radians(lon_dest))
-    z_dest = R * np.sin(lat_dest)
+    z_dest = R * np.sin(np.radians(lat_dest))
     
-    # oblicz odległość euklidesową
-    euclid_dist = np.sqrt((x_dest - x_curr)**2 + (y_dest - y_curr)**2 + (z_dest - z_curr)**2)
-    
-    # zwróć oczekiwany bardzo optymistyczny czas przejazdu
-    return euclid_dist / (heur_maxspeed / 3600)
+    # oblicz i zwróć odległość euklidesową
+    return np.sqrt((x_dest - x_curr)**2 + (y_dest - y_curr)**2 + (z_dest - z_curr)**2)
     
 
 # metoda definiująca liniowy porządek dla dróg różnego typu (atrybut 'highway')
