@@ -3,10 +3,14 @@ import networkx as nx
 
 
 # klasa ma na celu umożliwienie usługi geomapowania
-# otrzymując adres w formie tekstowej znajduje dla niego najbliższy możliwy węzeł w grafie
+# otrzymując adres w formie tekstowej, zwraca jego współrzędne geograficzne
+# dla zadanych współrzędnych, znajduje najbliższy możliwy węzeł w grafie
 class GeoMapper:
     
-    def map(self, G: nx.MultiDiGraph, address: str) -> int:
+    def map_to_coordinates(self, address: str) -> (float, float):
         y, x = ox.geocode(address) # throws InsufficientResponseError
-        return ox.distance.nearest_nodes(G, x, y)
+        return (y, x)
+    
+    def map_to_node(self, G: nx.MultiDiGraph, coordinates: tuple) -> int:
+        return ox.distance.nearest_nodes(G, coordinates[1], coordinates[0])
     
