@@ -1,6 +1,4 @@
 import networkx as nx
-import geopandas as gpd
-import pandas as pd
 import pickle
 from pyrosm import OSM, get_data
 from graph_utils import fill_max_speed, clean_edges_data
@@ -42,7 +40,7 @@ class GraphProvider:
     
     # w celu usprawnienia startu aplikacji przy wielokrotnym jej uruchamianiu
     # możliwe jest szybkie wczytanie gotowego grafu z pickle'a
-    def read_graph_from_pickle(self, filepath: str = "graph.pkl"):
+    def read_graph_from_pickle(self, filepath: str = "graph.pkl") -> nx.MultiDiGraph:
         with open(filepath, "rb") as f:
             G_loaded = pickle.load(f)
         return G_loaded
