@@ -1,7 +1,8 @@
 import networkx as nx
 import pickle
+import sys
 from pyrosm import OSM, get_data
-from graph_utils import fill_max_speed, clean_edges_data
+from src.graph_utils import fill_max_speed, clean_edges_data
 
 # klasa ta ma za zadanie dostarczyć gotowy graf przedstawiający sieć drogową
 # na podstawie wartości parametru albo wczytuje graf z wcześniej zapisanego pliku
@@ -16,7 +17,7 @@ class GraphProvider:
     def build_graph(self, region: str = "Warsaw") -> nx.MultiDiGraph:
         
         # pobieramy dane, tworzymy tabelę węzłów oraz krawędzi
-        osm = OSM(get_data(region))
+        osm = OSM(get_data(region, directory="."))
         nodes, edges = osm.get_network(nodes=True, network_type="driving")
         
         # usuwamy zbędne kolumny z tabeli reprezentującej węzły
@@ -45,4 +46,14 @@ class GraphProvider:
             G_loaded = pickle.load(f)
         return G_loaded
     
-    
+    def save_graph_to_pickle(self, G: nx.MultiDiGraph, filepath: str = "graph.gpickle") -> bool:
+        try:
+            with open(filepath, 'wb') as f:
+                pickle.dump(G, f, pickle.HIGHEST_PROTOCOL)
+                return True
+        except IOError as e:
+            print(f"I/O error({e.errno}): {e.strerror}")
+        except:
+            print("Unexpected Error: ", sys.exc_info()[0])
+        finally:
+            return False

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Text Entries</title>
+</head>
+<body>
+    <h1>Submitted Text Entries</h1>
+    <ul>
+        {% for entry in entries %}
+            <li>
+                Original Text: {{ entry.text }}
+                <form action="{% url 'delete_text_entry' entry.id %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit">Delete</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+    
+    {% if processed_texts %}
+    <h2>Processed Texts</h2>
+    <ul>
+            <li>{{ processed_texts }}</li>
+    </ul>
+    {% endif %}
+    
+    <!-- Button to trigger processing -->
+    <form action="{% url 'text_entry_success' %}" method="post">
+        {% csrf_token %}
+        <button type="submit" name="process_text">Process Texts</button>
+    </form>
+    
+    <a href="/">Enter more text</a>
+</body>
+</html>

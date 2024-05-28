@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Processed Text Entries</title>
+</head>
+<body>
+    <h1>Processed Text Entries</h1>
+    <ul>
+        {% for entry_id, processed_text in processed_entries %}
+            <li>ID: {{ entry_id }} - Processed Text: {{ processed_text }}</li>
+        {% endfor %}
+    </ul>
+    <a href="/">Enter more text</a>
+</body>
+</html>

@@ -1,7 +1,7 @@
 import networkx as nx
 import heapq as h
-from left_turn_handler import LeftTurnHandler
-from graph_utils import calculate_heuristic
+from src.left_turn_handler import LeftTurnHandler
+from src.graph_utils import calculate_heuristic
 
 
 # klasa ma na celu umożliwić znajdowanie najszybszej ścieżki przejazdu między dwoma (!) węzłami w grafie

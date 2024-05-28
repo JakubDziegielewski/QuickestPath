@@ -1,5 +1,5 @@
 import networkx as nx
-from graph_utils import calculate_bbox
+from src.graph_utils import calculate_bbox
 
 # klasa mająca na celu walidację danych wprowadzonych przez użytkownika
 # sprawdza m.in. to, czy liczba podanych punktów nie przekracza dopuszczalnej wartości max

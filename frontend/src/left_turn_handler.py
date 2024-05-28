@@ -1,5 +1,5 @@
 import networkx as nx
-from graph_utils import get_vector_between_nodes, calculate_sin, calculate_cos, calculate_angle, compare_highways
+from src.graph_utils import get_vector_between_nodes, calculate_sin, calculate_cos, calculate_angle, compare_highways
 
 
 # klasa ma na celu udostępnienie funkcjonalności rozpoznawania skrętów w lewo w grafie
