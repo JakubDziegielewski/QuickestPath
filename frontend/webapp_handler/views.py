@@ -19,16 +19,16 @@ def text_entry_view(request):
 
 def text_entry_success_view(request):
     entries = TextEntry.objects.all()
-    processed_texts = None  # Initially, no processing done
+    geojson = None  # Initially, no processing done
     if request.method == 'POST':
         # Check if the processing button is clicked
         if 'process_text' in request.POST:
             # Process all texts
             texts = [entry.text for entry in entries]
-            processed_texts = process_text_list(texts, app)
+            geojson = process_text_list(texts, app)
     return render(request, 'webapp_handler/text_entry_success.html', {
         'entries': entries,
-        'processed_texts': processed_texts
+        'geojson': geojson
     })
 
 def delete_text_entry_view(request, entry_id):

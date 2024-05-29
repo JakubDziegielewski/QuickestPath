@@ -2,6 +2,16 @@
 <html>
 <head>
     <title>Text Entries</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <style>
+        #map {
+            height: 800px;  /* Adjust height as needed */
+            width: 800px;
+        }
+    </style>
 </head>
 <body>
     <h1>Submitted Text Entries</h1>
@@ -17,12 +27,10 @@
         {% endfor %}
     </ul>
     
-    {% if processed_texts %}
-    <h2>Processed Texts</h2>
-    <ul>
-            <li>{{ processed_texts }}</li>
-    </ul>
-    {% endif %}
+    
+    
+    <!-- Map container -->
+    <div id="map"></div>
     
     <!-- Button to trigger processing -->
     <form action="{% url 'text_entry_success' %}" method="post">
@@ -31,5 +39,32 @@
     </form>
     
     <a href="/">Enter more text</a>
+
+    <!-- Leaflet map initialization script -->
+    <script>
+        // Initialize the map and set its view to your chosen geographical coordinates and a zoom level
+        var geojson = document.getElementById("geojson");
+        var map = L.map('map').setView([52.25, 21.01], 11);
+
+        // Load and display tile layers on the map
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+
+    </script>
+    {% if geojson %}
+    <h2>Processed Texts</h2>
+    <ul>
+            <li>{{ geojson }}</li>
+    </ul>
+    <div id="geojson-data" data-geojson='{{ geojson }}'></div>
+    <script>
+        var geojsonElement = document.getElementById('geojson-data');
+        var geo = geojsonElement.getAttribute('data-geojson');
+        var geojson = JSON.parse(geo.replace(/'/g, '"'));
+        L.geoJSON(geojson).addTo(map);
+    </script>
+    {% endif %}
 </body>
 </html>
