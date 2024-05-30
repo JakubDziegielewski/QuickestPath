@@ -61,14 +61,15 @@
     <script>
         var geojsonElement = document.getElementById('geojson-data');
         var geo = geojsonElement.getAttribute('data-geojson');
-        var coordsElement = document.getElementById('coords-data');
-        var last_coords = coordsElement.getAttribute('data-coords');
-        var last_coords_json = JSON.parse(last_coords.replace(/'/g, '"'));
         var geojson = JSON.parse(geo.replace(/"/g, '').replace(/'/g, '"'));
+
         if (geojson["type"] == "error") {
             window.alert(geojson["message"]);
         }
         else {
+            var coordsElement = document.getElementById('coords-data');
+            var last_coords = coordsElement.getAttribute('data-coords');
+            var last_coords_json = JSON.parse(last_coords.replace(/'/g, '"'));
             var coordinates = [];
             for (var i = 0; i < geojson['features'].length; i++) {
                 coordinates.push(geojson['features'][i]['geometry']['coordinates']);

@@ -53,15 +53,16 @@ def get_last_coords(app: App) -> list:
         "type": "FeatureCollection",
         "features": []
     }
-    for coords in app._last_query_coordinates:
-        feature = {
-            "type": "Feature",
-            "geometry": {
-                "type": "Point",
-                "coordinates": [float(coords[0]), float(coords[1])]
+    if app._last_query_coordinates is not None:
+        for coords in app._last_query_coordinates:
+            feature = {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [float(coords[0]), float(coords[1])]
+                }
             }
-        }
-        coords_json["features"].append(feature)
-    return coords_json
+            coords_json["features"].append(feature)
+        return coords_json
 
     

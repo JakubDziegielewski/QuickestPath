@@ -108,7 +108,7 @@ class App:
         try:
             points_coordinates = [self._geo_mapper.map_to_coordinates(address) for address in addresses]
         except InsufficientResponseError as e:
-            raise RuntimeError(f"Nie udało się zrealizować geomapowania jednego z punktów: {str(e)}")
+            raise RuntimeError(f"Nie udało się zrealizować geomapowania jednego z punktów: {str(e).replace("'", "")}")
         
         # sprawdź, czy każdy z punktów znajduje się w bbox wczytanej mapy
         if not self._input_validator.validate_points_within_bbox(self._G, points_coordinates):
