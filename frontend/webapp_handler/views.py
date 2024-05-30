@@ -4,7 +4,7 @@ from .models import TextEntry
 from .services import process_text_list, get_last_coords
 from src.app import App
 
-app = App(True, pickle_filepath="graph.gpickle")
+app = App(False)
 app.initialize_state()
 
 def text_entry_view(request):
