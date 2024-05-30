@@ -1,7 +1,7 @@
 import networkx as nx
 import heapq as h
-from src.left_turn_handler import LeftTurnHandler
-from src.graph_utils import calculate_heuristic
+from left_turn_handler import LeftTurnHandler
+from graph_utils import calculate_heuristic
 
 
 # klasa ma na celu umożliwić znajdowanie najszybszej ścieżki przejazdu między dwoma (!) węzłami w grafie
@@ -40,16 +40,16 @@ class BestPathFinder:
             
             # jeśli doszliśmy do celu - zwracamy ścieżkę
             if current_node == dest:
-                return self._reconstruct_path(predecessors, current_node)
+                return self._reconstruct_path(predecessors, current_node)#, real_dist[dest]
             
             # następnie badamy wszystkie sąsiednie węzły osiągalne z obecnego
             for edge in nx.edges(G, [current_node]):
                 
                 # zapisz id sąsiedniego węzła
-                neighbor = G.edges[(edge[0], edge[1], 0)]["v"] # TODO: założenie, że nie ma dwóch tak samo skierowanych krawędzi między dwoma węzłami (?)
+                neighbor = G.edges[(edge[0], edge[1], 0)]["v"]
                 
-                # zapisz dystans pomiędzy węzłami
-                edge_length = G.edges[(edge[0], edge[1], 0)]["length"]
+                # zapisz dystans pomiędzy węzłami (czyli oczekiwany czas przejazdu)
+                edge_length = G.edges[(edge[0], edge[1], 0)]["estimated_time"]
                 
                 # sprawdź, czy rozpatrywany jest skręt w lewo
                 # jeśli tak, dolicz odpowiednią karę
