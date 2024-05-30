@@ -80,12 +80,23 @@ def calculate_sin(a: np.ndarray, b: np.ndarray) -> float:
 
 
 # metoda tworząca wektor pomiędzy dwoma węzłami w grafie
+# dokonuje ona mapowania współrzędnych geograficznych (kątów) na płaszczyznę 2D
 def get_vector_between_nodes(G: nx.MultiDiGraph, node_from: int, node_to: int) -> np.ndarray:
-    x_from = G.nodes[node_from]['x']
-    y_from = G.nodes[node_from]['y']
-    x_to = G.nodes[node_to]['x']
-    y_to = G.nodes[node_to]['y']
+    R = 6371000 # promień Ziemi
     
+    # wydobądź informacje o wsp. geograficznych obu punktów
+    lon_from = G.nodes[node_from]['x']
+    lat_from = G.nodes[node_from]['y']
+    lon_to = G.nodes[node_to]['x']
+    lat_to = G.nodes[node_to]['y']
+    
+    # zmapuj je na płaszczyznę 2D [m]
+    x_from = R * np.radians(lon_from)
+    y_from = R * np.radians(lat_from)
+    x_to = R * np.radians(lon_to)
+    y_to = R * np.radians(lat_to)
+    
+    # oblicz różnice między punktami na obu współrzęnych
     dx = x_to - x_from
     dy = y_to - y_from
     
