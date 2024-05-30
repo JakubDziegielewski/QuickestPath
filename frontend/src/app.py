@@ -1,9 +1,9 @@
-from src.graph_provider import GraphProvider
-from src.left_turn_handler import LeftTurnHandler
-from src.input_validator import InputValidator
-from src.geo_mapper import GeoMapper
-from src.a_star import BestPathFinder
-from src.travel_sales_solver import TravelSalesmanSolver
+from graph_provider import GraphProvider
+from left_turn_handler import LeftTurnHandler
+from input_validator import InputValidator
+from geo_mapper import GeoMapper
+from a_star import BestPathFinder
+from travel_sales_solver import TravelSalesmanSolver
 from osmnx._errors import InsufficientResponseError
 
 # klasa reprezentująca działanie aplikacji
@@ -32,7 +32,7 @@ class App:
                  penalty_to_better_road: float = 30.0,
                  penalty_to_equal_road: float = 20.0,
                  penalty_to_worse_road: float = 10.0,
-                 heur_maxspeed: int = 120):
+                 heur_maxspeed: int = 140):
         
         self._is_state_initialized = False
         self._read_graph_from_pickle = read_graph_from_pickle
@@ -51,7 +51,7 @@ class App:
         self._left_turn_handler = None
         self._best_path_finder = None
         self._travel_sales_solver = None
-        
+        self._last_query_coordinates = None
         
     
     # metoda odpowiedzialna za inicjalizację stanu na starcie aplikacji
@@ -67,8 +67,6 @@ class App:
             self._G = graph_provider.read_graph_from_pickle(self._pickle_filepath)
         else:
             self._G = graph_provider.build_graph(self._region)
-            if not graph_provider.save_graph_to_pickle(self._G):
-                exit(1)
         
         # zainicjalizuj obiekty wymagane do funkcjonowania aplikacji
         
@@ -103,7 +101,7 @@ class App:
         
         # sprawdź, czy nie podano zbyt wielu punktów
         if not self._input_validator.validate_number_of_points(addresses):
-            raise RuntimeError("Podano zbyt wiele punktów do odwiedzenia!") # TODO: zamiast rzucać wyjątek, warning + przycięcie listy?
+            raise RuntimeError("Podano zbyt wiele punktów do odwiedzenia!")
     
         # zmapuj adresy na współrzędne geograficzne punktów w formie (szerokość geo., długość geo.)
         points_coordinates = []
@@ -115,14 +113,15 @@ class App:
         # sprawdź, czy każdy z punktów znajduje się w bbox wczytanej mapy
         if not self._input_validator.validate_points_within_bbox(self._G, points_coordinates):
             raise RuntimeError("Przynajmniej jeden z zadanych adresów nie znajduje się w zasięgu posiadanej mapy.")
-            
+        
+        # zapisz info o ostatnim przetwarzanym zapytaniu
+        self._last_query_coordinates = points_coordinates
+        
         # wiedząc, że adresy są w zasięgu naszej mapy, mapujemy każdy z nich na najbliższy mu geograficznie węzeł w grafie
         nodes_to_visit = [self._geo_mapper.map_to_node(self._G, point_coor) for point_coor in points_coordinates]
         
         # mające listę węzłów do odwiedzenia, szukamy rozwiązania zadanego TSP
         discovered_path = self._travel_sales_solver.solve(self._G, nodes_to_visit)
-        
-        # TODO: miejsce na ewnetualne przetworzenie wyniku
         
         # zwracamy znalezioną ścieżkę
         return discovered_path
