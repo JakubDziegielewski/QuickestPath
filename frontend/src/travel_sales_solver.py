@@ -1,7 +1,7 @@
 import networkx as nx
 import itertools
-from graph_utils import calculate_euclid_dist
-from a_star import BestPathFinder
+from src.graph_utils import calculate_euclid_dist
+from src.a_star import BestPathFinder
 
 # ta klasa ma na celu zwrócenie rozwiązania problemu wyszukiwania najlepszej
 # ścieżki pomiędzy wieloma zadanymi punktami
