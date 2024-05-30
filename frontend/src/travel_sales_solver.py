@@ -129,28 +129,3 @@ class TravelSalesmanSolver:
                 
         print(f"Best path time: {best_time}")
         return best_path
-                
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-    
