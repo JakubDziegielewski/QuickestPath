@@ -3,7 +3,7 @@ from xml.etree import ElementTree as ET
 import json
 from src.app import App
 
-def find_feature(array, low, high, id):
+def find_feature(array: list, low: int, high: int, id: str) -> int:
     if high >= low:
         mid = low + (high - low) // 2
     if array[mid]['id'] == id:
