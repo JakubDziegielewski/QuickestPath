@@ -1,0 +1,6 @@
+__pycache__
+Warsaw.osm.pbf
+cache
+graph.pkl
+graph.gpickle
+frontend/db.sqlite3
