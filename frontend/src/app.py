@@ -1,9 +1,9 @@
-from graph_provider import GraphProvider
-from left_turn_handler import LeftTurnHandler
-from input_validator import InputValidator
-from geo_mapper import GeoMapper
-from a_star import BestPathFinder
-from travel_sales_solver import TravelSalesmanSolver
+from src.graph_provider import GraphProvider
+from src.left_turn_handler import LeftTurnHandler
+from src.input_validator import InputValidator
+from src.geo_mapper import GeoMapper
+from src.a_star import BestPathFinder
+from src.travel_sales_solver import TravelSalesmanSolver
 from osmnx._errors import InsufficientResponseError
 
 # klasa reprezentująca działanie aplikacji
