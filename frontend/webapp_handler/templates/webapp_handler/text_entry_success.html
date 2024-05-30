@@ -57,23 +57,39 @@
     </script>
     {% if geojson %}
     <div id="geojson-data" data-geojson='{{ geojson }}'></div>
+    <div id="coords-data" data-coords='{{ last_coords}}'></div>
     <script>
         var geojsonElement = document.getElementById('geojson-data');
         var geo = geojsonElement.getAttribute('data-geojson');
+        var coordsElement = document.getElementById('coords-data');
+        var last_coords = coordsElement.getAttribute('data-coords');
+        var last_coords_json = JSON.parse(last_coords.replace(/'/g, '"'));
         var geojson = JSON.parse(geo.replace(/"/g, '').replace(/'/g, '"'));
-        
-        var coordinates = [];
-        for (var i = 0; i < geojson['features'].length; i++) {
-            coordinates.push(geojson['features'][i]['geometry']['coordinates']);
+        if (geojson["type"] == "error") {
+            window.alert(geojson["message"]);
         }
-        console.log(coordinates);
-        
-        var line = {
-            "type": "LineString",
-            "coordinates": coordinates
+        else {
+            var coordinates = [];
+            for (var i = 0; i < geojson['features'].length; i++) {
+                coordinates.push(geojson['features'][i]['geometry']['coordinates']);
+            }
+            var last_coords = [];
+            for (var i = 0; i < last_coords_json['features'].length; i++) {
+                var point = {
+                    "type": "Point",
+                    "coordinates": last_coords_json['features'][i]['geometry']['coordinates']
+                };
+                L.marker(point['coordinates']).addTo(map);
+            }
+
+            var line = {
+                "type": "LineString",
+                "coordinates": coordinates
+            };
+
+            var jsonLayer = L.geoJSON(line).addTo(map);
+            map.fitBounds(jsonLayer.getBounds());
         };
-        var jsonLayer = L.geoJSON(line).addTo(map);
-        map.fitBounds(jsonLayer.getBounds());
     </script>
     {% endif %}
 </body>

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import TextEntryForm
 from .models import TextEntry
-from .services import process_text_list
+from .services import process_text_list, get_last_coords
 from src.app import App
 
 app = App(True, pickle_filepath="graph.gpickle")
@@ -20,21 +20,21 @@ def text_entry_view(request):
 def text_entry_success_view(request):
     entries = TextEntry.objects.all()
     geojson = None  # Initially, no processing done
+    last_coords = None
     if request.method == 'POST':
         # Check if the processing button is clicked
         if 'process_text' in request.POST:
             # Process all texts
             texts = [entry.text for entry in entries]
             geojson = process_text_list(texts, app)
+            last_coords = get_last_coords(app)
     return render(request, 'webapp_handler/text_entry_success.html', {
         'entries': entries,
-        'geojson': geojson
+        'geojson': geojson,
+        'last_coords': last_coords
     })
 
 def delete_text_entry_view(request, entry_id):
     entry = get_object_or_404(TextEntry, id=entry_id)
     entry.delete()
     return redirect('text_entry_success')
-
-def process_text_entries_view(request):
-    pass

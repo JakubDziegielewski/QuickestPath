@@ -1,6 +1,5 @@
 import requests
 from xml.etree import ElementTree as ET
-import json
 from src.app import App
 
 def find_feature(array: list, low: int, high: int, id: str) -> int:
@@ -15,7 +14,12 @@ def find_feature(array: list, low: int, high: int, id: str) -> int:
 def process_text_list(text_list, app: App):
     # Example processing: convert all texts to uppercase
     processed_list = [text for text in text_list]
-    list_of_nodes = app.run_query(processed_list)
+    try:
+        list_of_nodes = app.run_query(processed_list)
+    except RuntimeError as e:
+        return {'type': 'error',
+                'message': e.args[0]}
+        
     string_nodes = [str(x) for x in list_of_nodes]
     result = ", ".join(string_nodes).replace('\n', '')
     data = "(node(id:" + result + "););out body;".replace("\n", "")
@@ -44,5 +48,20 @@ def process_text_list(text_list, app: App):
         geojson_result["features"].append(geojson["features"][index])
     return geojson_result
 
+def get_last_coords(app: App) -> list:
+    coords_json = {
+        "type": "FeatureCollection",
+        "features": []
+    }
+    for coords in app._last_query_coordinates:
+        feature = {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [float(coords[0]), float(coords[1])]
+            }
+        }
+        coords_json["features"].append(feature)
+    return coords_json
 
     
