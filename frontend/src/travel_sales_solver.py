@@ -1,6 +1,7 @@
 import networkx as nx
-from src.graph_utils import calculate_euclid_dist
-from src.a_star import BestPathFinder
+import itertools
+from graph_utils import calculate_euclid_dist
+from a_star import BestPathFinder
 
 # ta klasa ma na celu zwrócenie rozwiązania problemu wyszukiwania najlepszej
 # ścieżki pomiędzy wieloma zadanymi punktami
@@ -77,4 +78,79 @@ class TravelSalesmanSolver:
         
         # zwróć najlepszego znalezionego sąsiada
         return nearest_neighbor
+    
+    
+    # metoda napisana na potrzeby eksperymentów
+    # znajduje najlepszą ścieżkę w sposób brutalny
+    
+    def brute_solve(self, G: nx.MultiDiGraph, nodes: list) -> list:
+        
+        # wybierz pierwszy węzeł jako startowy, sklonuj listę pozostałych węzłów
+        start_node = nodes[0]
+        rest = nodes[1:]
+        
+        # wygeneruj wszystkie możliwe permutacje węzłów do odwiedzenia
+        permutations = list(itertools.permutations(rest))
+        
+        # zainicjalizuj zmienne na najlepszą dotychczasową trasę oraz najlepszy dotychczasowy czas trasy
+        best_path = []
+        best_time = float("inf") # 4720.81
+        
+        # dla każdej kolejnej permutacji wyznaczaj jej trasę i czas, dopóki wiadomo, że ma szansę być lepszą niż najlepsza dotychczasowa trasa
+        for perm in permutations:
+            
+            # zainicjalizuj miejsce na zapisywanie obecnie wyznaczonej ścieżki i obecnego czasu
+            current_path = []
+            current_time = 0.0
+            
+            # wyznacz kolejność węzłów do odwiedzenia
+            sequence = [start_node] + [node for node in perm]
+            
+            # znajduj najlepszą ścieżkę pomiędzy kolejnymi punktami
+            for i in range(len(sequence) - 1):
+                
+                res = self._best_path_finder.find_shortest_path(G, sequence[i], sequence[i+1])
+                partial_path = res[0]
+                partial_time = res[1]
+                
+                # dodaj wynik do dotychczasowej ścieżki i czasu
+                current_time += partial_time
+                current_path += partial_path
+                
+                # jeżeli czas przekroczył najlepsze rozwiązanie - przerwij
+                if current_time >= best_time:
+                    print("Przerwano liczenie trasy.")
+                    break
+                
+            if current_time < best_time:
+                print(f"Znaleziono lepszą trasę. Było: {best_time}. Jest: {current_time}")
+                best_path = current_path
+                best_time = current_time
+                
+        print(f"Best path time: {best_time}")
+        return best_path
+                
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     
