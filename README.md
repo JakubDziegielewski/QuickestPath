@@ -4,11 +4,19 @@ Project for SPDB course at WUT
 ## How to test the app
 
 0. Requirements:
+
     -Python >=3.10
+
     -networkx >=3.10 
+
     -pyrosm
+
+    -osmnx 1.9.3
+
     -geopandas
+
     -django 4.1
+
     -numpy
 
 1. git clone https://github.com/JakubDziegielewski/QuickestPath.git
