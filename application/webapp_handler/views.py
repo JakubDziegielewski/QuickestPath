@@ -26,8 +26,11 @@ def text_entry_success_view(request):
         if 'process_text' in request.POST:
             # Process all texts
             texts = [entry.text for entry in entries]
-            geojson = process_text_list(texts, app)
-            last_coords = get_last_coords(app)
+            geojson = {}
+            last_coords = []
+            if len(texts) > 0:
+                geojson = process_text_list(texts, app)
+                last_coords = get_last_coords(app)
     return render(request, 'webapp_handler/text_entry_success.html', {
         'entries': entries,
         'geojson': geojson,

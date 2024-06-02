@@ -1,5 +1,6 @@
 import osmnx as ox
 import networkx as nx
+from typing import Tuple
 
 
 # klasa ma na celu umożliwienie usługi geomapowania
@@ -7,7 +8,7 @@ import networkx as nx
 # dla zadanych współrzędnych, znajduje najbliższy możliwy węzeł w grafie
 class GeoMapper:
     
-    def map_to_coordinates(self, address: str) -> (float, float):
+    def map_to_coordinates(self, address: str) -> Tuple[float, float]:
         y, x = ox.geocode(address) # throws InsufficientResponseError
         return (y, x)
     
